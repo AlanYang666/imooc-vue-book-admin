@@ -1,0 +1,76 @@
+<!------------------------------------------------------------
+  第三章 第五节:   Vue.extend 进阶用法
+  实战中常用
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>Vue.extend 进阶用法</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+      /* 遮罩层样式 */
+      #loading-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.7);
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <button @click="showLoading">点击显示Loading</button>
+    </div>
+    <script>
+      function Loading(msg) {
+        // 1 创建 加载组件 根据id 有了定义的样式
+        const LoadingComponent = Vue.extend({
+          template: '<div id="loading-wrapper">{{msg}}</div>',
+          name: 'LoadingComponent',
+          props: {
+            msg: {
+              type: String,
+              // msg为传入的参数
+              default: msg
+            }
+          }
+          // 第二个字符串参数 是无效的 
+        }, 'LoadingComponent')
+        // 2 创建 div 作为挂载组件的节点
+        const div = document.createElement('div')
+        div.setAttribute('id', 'mount-here')
+        document.body.append(div)
+        // 将实例化的组件 挂载到 创建的div上; id=mount-here 只是用于定位挂载
+        // 实例化的组件结构 将完全取代 原div结构 
+        new LoadingComponent().$mount('#mount-here')
+
+        // 3 返回箭头函数 需要 Loading(msg)() 才会执行 需再调用一次
+        return () => {
+          document.body.removeChild(document.getElementById('loading-wrapper'))
+        }
+      }
+      // 挂载到Vue原型上 作为全局函数 $开头
+      Vue.prototype.$loading = Loading
+      new Vue({
+        el: '#root',
+        methods: {
+          showLoading() {
+            // 3 此处 hide 还不会执行 return后箭头函数 
+            // 相当于执行Loading('正在加载，请稍等...')
+            const hide = this.$loading('正在加载，请稍等...')
+            setTimeout(() => {
+              // 3 此处 hide() 会执行 return后箭头函数
+              // 相当于执行Loading('正在加载，请稍等...')();
+              hide()
+            }, 2000)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

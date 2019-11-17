@@ -1,0 +1,56 @@
+<!------------------------------------------------------------
+  第三章 第一节:   $emit 和 $on 用法
+  处理 事件的定义和消费 并将其分开 实现逻辑解耦
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>$emit 和 $on</title>
+    <!-- 0 引入vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <button @click="boost">点击触发事件</button>
+    </div>
+    <script>
+      new Vue({
+        el: '#root',
+        data() {
+          return {
+            message: 'hello vue'
+          }
+        },
+        created() {
+          // 1 this.$on('eventName',fn)
+          // 定义 事件名称 并指定 执行函数
+          this.$on('my_events', this.handleEvents)
+          // 通过观察源码发现 
+          // 一个执行函数 可以绑定 多个事件 
+          this.$on(['my_events','my_events2'], this.handleEvents3)
+          // 一个事件 可以绑定多个执行函数 执行顺序按定义的先后来
+          this.$on('my_events', this.handleEvents2)
+          // 打印 组件下所有的events 观察所有事件 和其执行函数
+          console.log(this._events);
+        },
+        methods: {
+          // 3 e作为 指定事件被消费时传的参数
+          handleEvents(e) {
+            console.log(this.message, e)
+          },
+          handleEvents2(e) {
+            console.log('my_events with another handleEvents2', e)
+          },
+          handleEvents3(e) {
+            console.log('my_events and my_events2 with same handleEvents3', e)
+          },
+          boost() {
+            // 2 this.$emit('eventName',params)
+            // 消费 指定的事件 并传参数 给此事件所有的执行函数
+            // $emit中的异常被Vue处理 不会让程序崩溃
+            this.$emit('my_events', 'my params')            
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

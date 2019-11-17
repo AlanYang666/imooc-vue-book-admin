@@ -1,0 +1,37 @@
+<!------------------------------------------------------------
+  第三章 第三节:   Vue.component 用法
+  静态方法component()创建组件
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>Vue.component 用法</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <Test :msg="message"></Test>
+    </div>
+    <script>
+      // Vue静态方法component('componentName',{template,props})
+      Vue.component('Test', {
+        // template 对应 Test组件的dom结构
+        template: '<div>{{msg}}</div>',
+        // Test组件其他属性 如 props(父组件传入参数)，data，methods，等等
+        props: {
+          msg: {
+            type: String,
+            default: 'default message'
+          }
+        }
+      })
+      new Vue({
+        el: '#root',
+        data() {
+          return {
+            message: "Test Component receive 'message' as prop(msg)"
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

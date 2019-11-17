@@ -1,0 +1,37 @@
+<!------------------------------------------------------------
+  第三章 第四节:   Vue.extend 基础用法
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>Vue.extend 基础用法</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <Test :msg="message"></Test>
+    </div>
+    <script>
+      // Vue.extend({componentOptions}) 生成组件的构造函数
+      // 1 创建 component = Vue.extend({组件定义项}) 可作为完整的组件项(本节) 或 组件构造函数
+      const component = Vue.extend({
+        template: '<div>{{msg}}</div>',
+        props: {
+          msg: {
+            type: String,
+            default: 'default message'
+          }
+        }
+      })
+      // 2 注入 Vue.component('comName', component)
+      Vue.component('Test', component)
+      new Vue({
+        el: '#root',
+        data() {
+          return {
+            message: "Test Extend Component"
+          }
+        }
+      })
+    </script>
+  </body>
+</html
