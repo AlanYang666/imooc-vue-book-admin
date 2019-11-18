@@ -1,0 +1,66 @@
+<!------------------------------------------------------------
+  第四章 第一节:   组件通信 provide 和 inject
+  处理 跨组件通信 父往子传可行 子往父传呢？？？
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>组件通信 provide 和 inject</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <Test></Test>
+    </div>
+    <script>
+      // 以函数方式 定义注册插件
+      function registerPlugin() {
+        // 创建 Test组件 并调用 Test2组件
+        Vue.component('Test', {
+          template: '<div>{{message}}<Test2 /></div>',
+          // 将自身组件打包成elTest 提供provide给 子孙组件调用 
+          provide() {
+            return {
+              elTest: this
+            }
+          },  // function 的用途是为了获取运行时环境，否则 this 将指向 window
+          data() {
+            return {
+              message: 'message from Test'
+            }
+          },
+          methods: {
+            // 用于更改 message内容
+            change(component) {
+              this.message = 'message from ' + component
+            }
+          }
+        })
+
+        // 创建 Test2组件 再调用 Test3组件
+        Vue.component('Test2', {
+          template: '<Test3 />'
+        })
+
+        // 创建组件 Test3
+        Vue.component('Test3', {
+          template: '<button @click="changeMessage">change</button>',
+          // 将父组件实例 注入inject给此组件
+          // 格式为 数组类型 元素为 提供的组件实例名称
+          inject: ['elTest'],
+          methods: {
+            changeMessage() {
+              // 通过 this.elTest 找到Test组件实例 并调用 change方法
+              // this.$options._componentTag 为所在组件的 组件标签名称
+              this.elTest.change(this.$options._componentTag)
+            }
+          }
+        })
+      }
+      // 使用注册插件
+      Vue.use(registerPlugin)
+      new Vue({
+        el: '#root'
+      })
+    </script>
+  </body>
+</html>

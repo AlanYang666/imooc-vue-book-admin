@@ -1,0 +1,69 @@
+<!------------------------------------------------------------
+  第四章 第六节:   插槽 slot
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>插槽 slot</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <div>案例1：slot的基本用法</div>
+      <Test>
+        <!-- 用template 控制Test组件的 slot -->
+        <!-- 对name='header' slot 进行自定义 {user} 即为 Test组件中的obj对象 v-slot可简写为#-->
+        <template v-slot:header="{user}">
+          <div>自定义header({{user.a}})</div>
+        </template>
+        <!-- 对无名 slot 进行自定义 v-slot等同于v-slot:default -->
+        <template v-slot="{user}">
+          <div>自定义body({{user.b}})</div>
+        </template>
+      </Test>
+    </div>
+    <hr>
+    <div id="root2">
+      <div>案例2：Vue2.6新特性 - 动态slot</div>
+      <Test>
+        <!-- 动态slot section为变量 根据变量来判断属于哪个slot -->
+        <template v-slot:[section]="{section}">
+          <div>this is {{section}}</div>
+        </template>
+      </Test>
+      <button @click="change">switch header and body</button>
+    </div>
+    <script>
+      // 创建 Test组件 含具名header slot 和 无名slot
+      Vue.component('Test', {
+        template: 
+          '<div>' +
+            '<slot name="header" :user="obj" :section="\'header\'">' +
+              '<div>默认header</div>' +
+            '</slot>' +
+            '<slot :user="obj" :section="\'body\'">默认body</slot>' +
+          '</div>',
+        data() {
+          return {
+            obj: { a: 1, b: 2 }
+          }
+        }
+      })
+      new Vue({ el: '#root' })
+      new Vue({ 
+        el: '#root2',
+        data() {
+          return {
+            section: 'header'
+          }
+        },
+        methods: {
+          change() {
+            this.section === 'header' ?
+              this.section = 'default' :
+              this.section = 'header'
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

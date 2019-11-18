@@ -1,0 +1,188 @@
+<!------------------------------------------------------------
+  第四章 第三节:   监听器 watch
+------------------------------------------------------------->
+<html>
+
+<head>
+  <title>监听器 watch</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="root">
+    <h3>Watch 用法1：常见用法</h3>
+    <input v-model="message">
+    <span>{{copyMessage}}</span>
+  </div>
+  <div id="root2">
+    <h3>Watch 用法2：绑定方法</h3>
+    <input v-model="message">
+    <span>{{copyMessage}}</span>
+  </div>
+  <div id="root3">
+    <h3>Watch 用法3：deep + handler</h3>
+    <!-- 深度监听 -->
+    <input v-model="deepMessage.a.b">
+    <span>{{copyMessage}}</span>
+  </div>
+  <div id="root4">
+    <h3>Watch 用法4：immediate</h3>
+    <input v-model="message">
+    <span>{{copyMessage}}</span>
+  </div>
+  <div id="root5">
+    <h3>Watch 用法5：绑定多个 handler</h3>
+    <input v-model="message">
+    <span>{{copyMessage}}</span>
+  </div>
+  <div id="root6">
+    <h3>Watch 用法6：监听对象属性</h3>
+    <input v-model="deepMessage.a.b">
+    <span>{{copyMessage}}</span>
+  </div>
+
+  <script>
+    // root 用法1：常见用法
+    new Vue({
+      el: '#root',
+      watch: {
+        message(value) {
+          // 自动跟随 message的新值
+          this.copyMessage = value
+        }
+      },
+      data() {
+        return {
+          message: 'Hello Vue',
+          copyMessage: ''
+        }
+      }
+    })
+
+    // root2 用法2：绑定方法
+    new Vue({
+      el: '#root2',
+      watch: {
+        // 将监听方法 放在methods中 并匹配 字符串方法名称
+        message: 'handleMessage'
+      },
+      data() {
+        return {
+          message: 'Hello Vue',
+          copyMessage: ''
+        }
+      },
+      methods: {
+        handleMessage(value) {
+          this.copyMessage = value
+        }
+      }
+    })
+
+    // root3 用法3：handler + deep
+    new Vue({
+      el: '#root3',
+      watch: {
+        deepMessage: {
+          // handler 监听函数
+          handler: 'handleDeepMessage',
+          // 开启 深度监听
+          deep: true
+        }
+      },
+      data() {
+        return {
+          // 有深度的属性 对象的 属性对象的 属性
+          deepMessage: {
+            a: {
+              b: 'Deep Message'
+            }
+          },
+          copyMessage: ''
+        }
+      },
+      methods: {
+        handleDeepMessage(value) {
+          this.copyMessage = value.a.b
+        }
+      }
+    })
+
+    // root4 用法4：immediate
+    new Vue({
+      el: '#root4',
+      watch: {
+        message: {
+          handler: 'handleMessage',
+          // 立即监听 页面渲染前就监听
+          immediate: true,
+        }
+      },
+      data() {
+        return {
+          message: 'Hello Vue',
+          copyMessage: ''
+        }
+      },
+      methods: {
+        handleMessage(value) {
+          this.copyMessage = value
+        }
+      }
+    }),
+
+    // root5 用法5：绑定多个 handler
+    new Vue({
+        el: '#root5',
+        watch: {
+          // 以数组方式绑定多个过滤器 按顺序监听处理 用于处理多逻辑
+          message: [
+            // 可以是 对象 {handler: 'methodName'}
+            {handler: 'handleMessage',},
+            // 可以是 methodName
+            'handleMessage2',
+            // 可以是 函数
+            function (value) {
+              this.copyMessage = this.copyMessage + '...'
+            }
+          ]
+        },
+        data() {
+          return {
+            message: 'Hello Vue',
+            copyMessage: ''
+          }
+        },
+        methods: {
+          handleMessage(value) {
+            this.copyMessage = value
+          },
+          handleMessage2(value) {
+            this.copyMessage = this.copyMessage + '*'
+          }
+        }
+      })
+    
+    // root6 用法6：监听对象属性 优化用法3
+    new Vue({
+      el: '#root6',
+      watch: {
+        // 直接监听 对象的相关属性(字符串形式)
+        'deepMessage.a.b': 'handleMessage'
+      },
+      data() {
+        return {
+          deepMessage: { a: { b: 'Hello Vue' } },
+          copyMessage: ''
+        }
+      },
+      methods: {
+        handleMessage(value) {
+          this.copyMessage = value
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

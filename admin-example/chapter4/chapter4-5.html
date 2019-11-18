@@ -1,0 +1,42 @@
+<!------------------------------------------------------------
+  第四章 第五节:   Vue.observable
+  Vue2.6 新特性 处理简单的 vuex 状态管理
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>Vue.observable</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      {{message}}
+      <button @click="change">Change</button>
+    </div>
+    <script>
+      // 1 传入 观察对象 作为 state管理的属性(响应式属性)
+      const state = Vue.observable({ message: 'Vue 2.6' })
+
+      // 2 mutation对象的setKey方法 用于改变 state管理的对应key属性值
+      const mutation = {
+        setMessage(value) {
+          state.message = value
+        }
+      }
+      new Vue({
+        el: '#root',
+        computed: {
+          // 3 用计算属性 获取 state管理的属性
+          message() {
+            return state.message
+          }
+        },
+        methods: {
+          // 4 用组件函数 修改 state管理的属性
+          change() {
+            mutation.setMessage('Vue 3.0')
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

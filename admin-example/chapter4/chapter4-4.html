@@ -1,0 +1,61 @@
+<!------------------------------------------------------------
+  第四章 第四节:   :class 和 :style 绑定的高级用法
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>class 和 style 绑定的高级用法</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <!-- 动态类名 :class -->
+      <!-- 数组格式 1 元素可为 字符串类名 -->
+      <!-- :class="['className1','className2'...]" -->
+      <div :class="['active', 'normal']">数组绑定多个class</div>
+      
+      <!-- 数组格式 2 元素可为 对象 格式为{className: bool} -->
+      <!-- :class="[{className1: bool}, {className2: bool}, 'className3'...]" -->
+      <div :class="[{active: isActive}, 'normal']">数组包含对象绑定class</div>
+
+      <!-- 数组格式 3 元素可为 methods中函数调用 返回 字符串类名 -->
+      <!-- :class="[methodReturnClassName1(),...]" -->
+      <div :class="[showWarning(), 'normal']">数组包含方法绑定class</div>
+
+      <!-- 动态样式 :style -->
+      <!-- 数组格式 1 元素可为 style对象 格式为{styleName1: 'styleValue1',...} -->
+      <div :style="[warning, bold]">数组绑定多个style</div>
+
+      <!-- 数组格式 2 元素可为 methods中函数调用 返回 style对象 -->
+      <div :style="[warning, mix()]">数组包含方法绑定style</div>
+      <!-- 了解 先绑定最后的值 不满足 则从右至左匹配 -->
+      <div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }">style多重值</div>
+    </div>
+    <script>
+      new Vue({
+        el: '#root',
+        data() {
+          return {
+            isActive: true,
+            warning: {
+              color: 'orange', lineHeight: '50px'
+            },
+            bold: {
+              fontWeight: 'bold'
+            }
+          }
+        },
+        methods: {
+          showWarning() {
+            return 'warning'
+          },
+          mix() {
+            return {
+              ...this.bold,
+              fontSize: 20
+            }
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
