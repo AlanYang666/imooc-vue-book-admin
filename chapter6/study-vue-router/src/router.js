@@ -1,3 +1,4 @@
+/* eslint-disable */
 // 安装 vue-router
 // npm i -S vue-router
 import Vue from 'vue';
@@ -11,19 +12,23 @@ const routes = [
   {
     // path 千万别掉了 /
     path: '/hello-world',
-    component: HelloWorld
+    component: HelloWorld,
+    meta: {title: 'Hello-World'}
   },
-  { path: '/a', component: () => import('./components/A')}
+  { path: '/a', component: () => import('./components/A'), meta: {title: 'A'}},
+  { path: '/b', component: () => import('./components/B')}
 ]
 // 创建路由 并导出
 const router = new Route({
   routes
 })
-/* eslint-disable */
+
 // 全局路由守卫 放在router.js全局配置中 因为不在组件中 所以无法使用this
 // 每个路由都会触发
 router.beforeEach((to, from, next) => {
   console.log('全局守卫-beforeEach-路由进入之前', to, from);
+  // 处理页面 title 本质上属于路由全局配置 不应该放在组件的生命周期中处理
+  document.title = to.meta.title || 'study router';
   next();
 })
 router.beforeResolve((to, from, next) => {
