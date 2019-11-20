@@ -1,0 +1,77 @@
+<!------------------------------------------------------------
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>vuex 原理解析</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <!-- 第一个组件 -->
+    <div id="root">{{data}}</div>
+    <!-- 第二个组件 -->
+    <div id="root2">{{data2}}</div>
+    <!-- 第三个组件 -->
+    <div id="root3">
+      <button @click="change">change</button>
+    </div>
+
+    <script>
+      // 1 注册插件 模拟 vuex功能
+      function registerPlugin(Vue) {
+        // 2 模拟 vuex对象
+        const vuex = {}
+        // 3 vuex的state对象 是 Vue的实例(含有data属性) 具备响应式
+        vuex._vm = new Vue({
+          data: {
+            message: 'hello vue.js'
+          }
+        })
+        vuex.state = vuex._vm
+
+        // 4 vuex的mutation对象 含有改变data属性的方法
+        vuex.mutations = {
+          setMessage(value) {
+            vuex.state.message = value
+          }
+        }
+        // 5 初始化方法 vuex对象 挂载到组件的$store上
+        function init() {
+          this.$store = vuex
+        }
+        // 6 mixin影响所有组件: 所有vue组件 都在创建前 初始化获取vuex(响应式状态管理组件)
+        Vue.mixin({
+          beforeCreate: init
+        })
+      }
+      // 7 使用vuex插件
+      Vue.use(registerPlugin)
+      new Vue({
+        el: '#root',
+        // 8 在computed中 获取 vuex状态属性
+        computed: {
+          data() {
+            return this.$store.state.message
+          }
+        }
+      })
+      new Vue({
+        el: '#root2',
+        computed: {
+          data2() {
+            return this.$store.state.message
+          }
+        }
+      })
+      new Vue({
+        el: '#root3',
+        methods: {
+          change() {
+            const newValue = this.$store.state.message + '.'
+            // 9 修改 vuex状态管理的属性值
+            this.$store.mutations.setMessage(newValue)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
