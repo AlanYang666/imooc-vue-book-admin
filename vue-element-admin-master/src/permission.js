@@ -10,11 +10,13 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
+// 路由全局守卫 进入页面前
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
 
   // set page title
+  // 获取路由中的title 展示在页面标签上
   document.title = getPageTitle(to.meta.title)
 
   // determine whether the user has logged in

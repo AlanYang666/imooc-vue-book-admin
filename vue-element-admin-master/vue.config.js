@@ -94,7 +94,9 @@ module.exports = {
     config
       // https://webpack.js.org/configuration/devtool/#development
       .when(process.env.NODE_ENV === 'development',
-        config => config.devtool('cheap-source-map')
+        // 改为source-map 可以观察源码进行【调试】 修改配置文件需重启项目
+        // 改为eval 实际开发中构建【速度最快】 无法观察源码进行调试
+        config => config.devtool('source-map')
       )
 
     config
