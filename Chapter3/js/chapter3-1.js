@@ -4,12 +4,15 @@ function eventsMixin (Vue) {
   // 3-1 $on 源码
   Vue.prototype.$on = function (event, fn) {
     var vm = this;
+    // 执行函数fn 也可绑定多个事件
     if (Array.isArray(event)) {
       for (var i = 0, l = event.length; i < l; i++) {
         // 事件的递归处理 数组情况
         vm.$on(event[i], fn);
       }
     } else {
+      // vm._events对象 集中管理所有事件 
+      // vm._events[event] 用数组[]类型管理执行函数 可绑定多个执行函数
       (vm._events[event] || (vm._events[event] = [])).push(fn);
       // optimize hook:event cost by using a boolean flag marked at registration
       // instead of a hash lookup

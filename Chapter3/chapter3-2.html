@@ -14,9 +14,11 @@
       <div v-loading="isLoading">{{data}}</div>
       <button @click="update">更新</button>
     </div>
+
     <script>
       // 使用debugger来调试代码
       debugger
+
       // Vue.directive('my-directive',{相关方法}) 查看官方文档一般用update
       // Vue.directive('my-directive',fn) fn会绑定到 bind 和 update
       Vue.directive('loading', {
@@ -26,7 +28,8 @@
           // binding 指令绑定的数据，名称等相关属性
           // vnode 被转换的 虚拟节点
           console.log(el ,binding , vnode);
-          // 根据绑定的值 来判断 创建和删除 视图节点
+
+          // 根据 loading指令绑定的值 来判断 创建和删除 视图节点
           if (binding.value) {
             // 创造 遮罩层加载效果
             const div = document.createElement('div')

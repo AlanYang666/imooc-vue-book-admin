@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
-// 引入路由
+// 1 安装 vue-router
+// 2 引入路由 --
+// 3 路由组件 必须通过 router-view来实现
 import router from './router';
 Vue.config.productionTip = false
 

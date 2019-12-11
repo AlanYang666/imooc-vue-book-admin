@@ -1,5 +1,7 @@
 /* eslint-disable */
-// 安装 vue-router
+// 1 安装 vue-router --
+// 2 引入路由 
+// 3 路由组件 必须通过 router-view来实现
 // npm i -S vue-router
 import Vue from 'vue';
 import Route from 'vue-router';
@@ -13,6 +15,7 @@ const routes = [
     // path 千万别掉了 /
     path: '/hello-world',
     component: HelloWorld,
+    // meta元信息 放自定义属性
     meta: {title: 'Hello-World'}
   },
   { path: '/a', component: () => import('./components/A'), meta: {title: 'A'}},
@@ -22,6 +25,7 @@ const routes = [
 const router = new Route({
   routes
 })
+
 
 // 全局路由守卫 放在router.js全局配置中 因为不在组件中 所以无法使用this
 // 每个路由都会触发

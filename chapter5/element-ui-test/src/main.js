@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-// 完全加载方式 build打包后体积大
+// 完全加载方式 build打包后体积大 库依赖chunk-vendors.xxx.js 700kb
 // 1 导入 element-ui 插件
 // import ElementUI from 'element-ui';
 // 2 导入 element-ui 样式
@@ -8,7 +8,7 @@ import App from './App.vue'
 // 3 使用 element-ui 插件
 // Vue.use(ElementUI);
 
-// 手动 按需加载方式
+// 手动 按需加载方式 build打包后体积小 库依赖chunk-vendors.xxx.js 110kb
 // a 导入 需要的 element-ui 组件
 import {Button, Message} from 'element-ui';
 // b 将 需要的组件 放入到Vue中 无需处理 相关css

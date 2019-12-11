@@ -22,13 +22,18 @@
         },
         created() {
           // 1 this.$on('eventName',fn)
-          // 定义 事件名称 并指定 执行函数
+          // 事件定义 指定事件名称 并指定 执行函数
           this.$on('my_events', this.handleEvents)
-          // 通过观察源码发现 
-          // 一个执行函数 可以绑定 多个事件 
-          this.$on(['my_events','my_events2'], this.handleEvents3)
+
+          // 通过断点调试 观察源码发现 
+
           // 一个事件 可以绑定多个执行函数 执行顺序按定义的先后来
           this.$on('my_events', this.handleEvents2)
+
+          // 一个执行函数 可以绑定 多个事件 
+          this.$on(['my_events','my_events2'], this.handleEvents3)
+          
+
           // 打印 组件下所有的events 观察所有事件 和其执行函数
           console.log(this._events);
         },
@@ -37,15 +42,18 @@
           handleEvents(e) {
             console.log(this.message, e)
           },
+
           handleEvents2(e) {
             console.log('my_events with another handleEvents2', e)
           },
+
           handleEvents3(e) {
             console.log('my_events and my_events2 with same handleEvents3', e)
           },
+
           boost() {
             // 2 this.$emit('eventName',params)
-            // 消费 指定的事件 并传参数 给此事件所有的执行函数
+            // 事件消费 消费指定的事件 并传参数 给此事件所有的执行函数
             // $emit中的异常被Vue处理 不会让程序崩溃
             this.$emit('my_events', 'my params')            
           }

@@ -1,19 +1,19 @@
 <template>
 	<div id="app">
-		<!-- el-form 属性 -->
+		<!-- el-form 表单 属性 -->
 		<!-- :model 接收表单数据源{} -->
 		<!-- inline 表单横向 行内排列 bool -->
 		<!-- :rules 校验规则对象{} -->
 		<!-- :validate-on-rule-change 规则改变时是否立马校验 -->
     <!-- status-icon 校验状态图标 -->
     <!-- label-width 单位为px -->
-    <!-- label-postion label与表单项的相对位置 -->
+    <!-- label-postion label与表单项的相对位置 需将inline设置为false-->
     <!-- disabled 禁用表单 -->
     <!-- size 控制表单整体大小 -->
     <!-- hide-required-asterisk 隐藏左侧校验的红星 -->
 		<el-form style="width:500px" label-width="100px" label-position='top' label-suffix='：' :disabled='false' size='small' hide-required-asterisk
      :inline='false' :model="data" :rules="rules" :validate-on-rule-change='false' ref="myForm" status-icon>
-			<!-- el-form-item 属性 -->
+			<!-- el-form-item 表单项 属性 -->
 			<!-- label 单项标签说明 -->
 			<!-- prop 匹配校验规则对象中的属性 -->
 			<el-form-item label="审批人" prop="user">
@@ -49,11 +49,12 @@ export default {
 	//     }
 	//   }
 	// },
-
+	
 	/* 2 表单验证 */
 	/* 表单最大的用处： 1 表单校验 和 2表单全局控制 */
 	data() {
-		// 自定义validator 3个参数 rule value callback
+		// 自定义validator 3个参数 rule value callback 
+		// 一般在工具文件中处理好后rules 由表单组件引入使用 或者mixin处理
 		// const userValidator = (rule, value, callback) => {
 		// 	if (value.length > 3) {
 		// 		callback();
@@ -67,6 +68,7 @@ export default {
 				user: "",
 				region: ""
 			},
+			// 规范的校验方式
 			rules: {
 				// 此处的user 与 el-form-item 中的prop属性一一对应 完成输入时校验
 				// 可以用单个对象(单一规则必须输入) 也可以用 数组结构(自定义规则函数)
@@ -84,16 +86,17 @@ export default {
 	methods: {
 		onSubmit() {
 			console.log(this.data);
-			// 方法1 很low 需要大量的校验和判断 不灵活 
-			// if(!this.data.user){
-			//   return this.$message.error('用户名不能为空')
-			// } else if (this.data.user.length > 10) {
-			//   return this.$message.error('用户名长度不能超过10')
-			// }
+			/* 方法1 很low 需要大量的校验和判断 不灵活 
+			if(!this.data.user){
+			  return this.$message.error('用户名不能为空')
+			} else if (this.data.user.length > 10) {
+			  return this.$message.error('用户名长度不能超过10')
+			}
+			*/
 
-			// 方法2 完成表单提交时 整体校验 通过表单的validate方法 
+			// 方法2 推荐 完成表单提交时 整体校验 通过表单组件的validate方法 
 			this.$refs.myForm.validate((isValid, errors) => {
-				// 可集中处理错误
+				// 可集中处理错误和异常
 				console.log(isValid, errors);
 			});
 		},
